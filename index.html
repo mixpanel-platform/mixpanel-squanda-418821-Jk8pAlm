@@ -8,8 +8,66 @@
   <body class="mixpanel-platform-body">
     <script>
       MP.api.ready(function() {
-        // Run queries and display results here
-      });
+        /*  First Chart */
+      
+        var first_chart = MP.api.events('app_opened', 'snowball_opened', {
+            from: moment().subtract(1, 'months'),
+            unit: 'day'
+        });
+     
+        var second_chart = MP.api.events('launch_from_app_icon', 'launch_from_notification', {
+            from: moment().subtract(2, 'months'),
+            unit: 'day'
+        });
+       
+       
+        var third_chart = MP.api.events('app_review_rated', 'app_review_feedback_given', {
+            from: moment().subtract(1, 'months'),
+            unit: 'day'
+        });
+        
+        var fourth_chart = MP.api.events('app_opened_via_lockscreen', 'app_opened_via_drawer', {
+            from: moment().subtract(2, 'months'),
+            unit: 'day'
+        });
+        
+        $.when(first_chart, second_chart, third_chart, fourth_chart).done(function(first_chart, second_chart, third_chart, fourth_chart) {
+            
+           
+            
+            var drawGraph = function(firstChartData, secondChartData, thirdChartData, fourthChartData){
+          
+                $('<div class="first"></div>').css({'width':'460px', 'float':'left'}).appendTo('body').MPChart({
+                    chartType: 'line',
+                    data: firstChartData
+                });
+                
+                $('<div class="second"></div>').css({'width':'460px', 'float':'right'}).appendTo('body').MPChart({
+                    chartType: 'line',
+                    data: secondChartData
+                });
+                
+                $('<div class="third"></div>').css({'width':'460px', 'float':'left'}).appendTo('body').MPChart({
+                    chartType: 'pie',
+                    data: thirdChartData
+                });
+                
+                $('<div class="fourth"></div>').css({'width':'460px', 'float':'right'}).appendTo('body').MPChart({
+                    chartType: 'bar',
+                    data: fourthChartData
+                });
+                //$('.mixpanel-platform-multi_selector').css({'clear':'both'});
+                //$('.title').css({'width':'55px'});
+                $('.color_toggle_dropdown').each(function(){this.style.setProperty('width', '170px', 'important')});
+                $('.title').each(function(){this.style.setProperty('width', '105px', 'important')});
+                
+            }
+            
+            
+            drawGraph(first_chart.values(), second_chart.values(), third_chart.values(), fourth_chart.values());
+            
+        });
+     });
     </script>
   </body>
 </html>
